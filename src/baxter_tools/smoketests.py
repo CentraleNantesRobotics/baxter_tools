@@ -131,7 +131,7 @@ class Enable(SmokeTest):
             # Allow User Zero G Testing
             rospy.sleep(10.0)
             print ("Test: State")
-            print self._rs.state()
+            print (self._rs.state())
             print ("Test: Disable")
             self._rs.disable()
             self.result[0] = True
@@ -268,7 +268,7 @@ class MoveArms(SmokeTest):
             try:
                 limb.move_to_joint_positions(angle, timeout)
                 queue.put(None)
-            except Exception, exception:
+            except (Exception, exception):
                 queue.put(traceback.format_exc())
                 queue.put(exception)
 
