@@ -100,7 +100,7 @@ class SmokeTest(object):
                 testlog.write("%s\n%s%s\n" %
                     ('*' * 40, self.result[1], '*' * 40,)
                     )
-        print "Results of %s saved to file: %s" % (self._name, filename,)
+        print ("Results of %s saved to file: %s" % (self._name, filename,))
         print ("------- Result: %s -------\n\n" %
                ("Success" if self.result[0] else "Failure",))
 
@@ -126,13 +126,13 @@ class Enable(SmokeTest):
         """Runs Enable Smoke Test
         """
         try:
-            print "Test: Enable - Zero G for 10 Seconds"
+            print ("Test: Enable - Zero G for 10 Seconds")
             self._rs.enable()
             # Allow User Zero G Testing
             rospy.sleep(10.0)
-            print "Test: State"
+            print ("Test: State")
             print self._rs.state()
-            print "Test: Disable"
+            print ("Test: Disable")
             self._rs.disable()
             self.result[0] = True
         except Exception:
@@ -152,10 +152,10 @@ class Messages(SmokeTest):
         """
         try:
             msg = 'robot/joint_states'
-            print "Test: Subscribe to topic: /%s" % msg
+            print ("Test: Subscribe to topic: /%s" % msg)
             rospy.wait_for_message(msg, JointState, 5.0)
             msg = 'robot/analog_io_states'
-            print "Test: Subscribe to topic: /%s" % msg
+            print ("Test: Subscribe to topic: /%s" % msg)
             rospy.wait_for_message(
                 msg,
                 AnalogIOStates,
@@ -178,9 +178,9 @@ class Services(SmokeTest):
         """
         try:
             srv = '/ExternalTools/left/PositionKinematicsNode/IKService'
-            print "Test: Service availability: %s" % srv
+            print ("Test: Service availability: %s" % srv)
             rospy.wait_for_service(srv, 5.0)
-            print "Test: IK service call Solve IK"
+            print ("Test: IK service call Solve IK")
             iksvc = rospy.ServiceProxy(srv, SolvePositionIK)
             ikreq = SolvePositionIKRequest()
             pose = PoseStamped(
@@ -219,19 +219,19 @@ class Head(SmokeTest):
         Runs Head Smoke Test.
         """
         try:
-            print "Enabling robot..."
+            print ("Enabling robot...")
             self._rs.enable()
-            print "Test: Moving Head to Neutral Location"
+            print ("Test: Moving Head to Neutral Location")
             head = baxter_interface.Head()
             head.set_pan(0.0, 0.05)
-            print "Test: Pan Head"
+            print ("Test: Pan Head")
             head.set_pan(1.0, 0.05)
             head.set_pan(-1.0, 0.05)
             head.set_pan(0.0, 0.05)
-            print "Test: Nod Head"
+            print ("Test: Nod Head")
             for _ in xrange(3):
                 head.command_nod()
-            print "Test: Display Image on Screen - 5 seconds"
+            print ("Test: Display Image on Screen - 5 seconds")
             image_path = (self._rp.get_path('baxter_tools') +
                           '/share/images')
             img = cv2.imread(image_path + '/baxterworking.png')
@@ -243,7 +243,7 @@ class Head(SmokeTest):
             img = cv2.imread(image_path + '/researchsdk.png')
             msg = cv_bridge.CvBridge().cv2_to_imgmsg(img)
             pub.publish(msg)
-            print "Disabling robot..."
+            print ("Disabling robot...")
             self._rs.disable()
             self.result[0] = True
         except Exception:
@@ -273,9 +273,9 @@ class MoveArms(SmokeTest):
                 queue.put(exception)
 
         try:
-            print "Enabling robot..."
+            print ("Enabling robot...")
             self._rs.enable()
-            print "Test: Create Limb Instances"
+            print ("Test: Create Limb Instances")
             right = baxter_interface.Limb('right')
             left = baxter_interface.Limb('left')
             left_queue = Queue.Queue()
@@ -291,8 +291,8 @@ class MoveArms(SmokeTest):
                  [0.0, -0.55, 0.0, 0.75, 0.0, 1.26, 0.0],
                 )
             for move in joint_moves:
-                print "Test: Moving to Joint Positions: ",
-                print ", ".join("%.2f" % x for x in move)
+                print ("Test: Moving to Joint Positions: ")
+                print (", ".join("%.2f" % x for x in move))
                 left_thread = threading.Thread(
                     target=move_thread,
                     args=(left,
@@ -328,7 +328,7 @@ class MoveArms(SmokeTest):
                 if not result is None:
                     raise right_queue.get()
                 rospy.sleep(1.0)
-            print "Disabling robot..."
+            print ("Disabling robot...")
             self._rs.disable()
             self.result[0] = True
             rospy.sleep(5.0)
@@ -348,14 +348,14 @@ class Grippers(SmokeTest):
         Runs Grippers Smoke Test.
         """
         try:
-            print "Enabling robot, Moving to Neutral Location..."
+            print ("Enabling robot, Moving to Neutral Location...")
             self._rs.enable()
             for name in ['left', 'right']:
                 limb = baxter_interface.Limb(name)
                 gripper = baxter_interface.Gripper(name, CHECK_VERSION)
                 limb.move_to_neutral()
                 rospy.sleep(2.0)
-                print "Test: Verify %s Gripper Type" % (name.capitalize(),)
+                print ("Test: Verify %s Gripper Type" % (name.capitalize(),))
                 if gripper.type() is not 'electric':
                     raise NameError("Test Requires Two Electric Grippers")
                 s_topic = 'robot/end_effector/' + name + '_gripper/state'
@@ -363,24 +363,24 @@ class Grippers(SmokeTest):
                                                   EndEffectorState,
                                                   5.0
                                                   )
-                print "Test: Reboot %s Gripper" % (name.capitalize(),)
+                print ("Test: Reboot %s Gripper" % (name.capitalize(),))
                 gripper.reboot()
-                print "Test: Calibrating %s Gripper" % (name.capitalize(),)
+                print ("Test: Calibrating %s Gripper" % (name.capitalize(),)
                 gripper.calibrate()
-                print "Test: Close %s Gripper" % (name.capitalize(),)
+                print ("Test: Close %s Gripper" % (name.capitalize(),))
                 gripper.close(True)
-                print "Test: Open %s Gripper" % (name.capitalize(),)
+                print ("Test: Open %s Gripper" % (name.capitalize(),))
                 gripper.open(True)
-                print "Test: Close %s Gripper" % (name.capitalize(),)
+                print ("Test: Close %s Gripper" % (name.capitalize(),))
                 gripper.close(True)
-                print "Test: Open %s Gripper" % (name.capitalize(),)
+                print ("Test: Open %s Gripper" % (name.capitalize(),))
                 gripper.open(True)
-                print "Test: %s Gripper Position Moves" % (name.capitalize(),)
+                print ("Test: %s Gripper Position Moves" % (name.capitalize(),))
                 gripper.command_position(50.0, True)
                 gripper.command_position(75.0, True)
                 gripper.command_position(0.0, True)
                 gripper.command_position(100.0, True)
-                print "Test: %s Gripper Velocity Moves" % (name.capitalize(),)
+                print ("Test: %s Gripper Velocity Moves" % (name.capitalize(),))
                 gripper.set_moving_force(100.0)
                 gripper.set_velocity(50.0)
                 gripper.close(True)
@@ -393,7 +393,7 @@ class Grippers(SmokeTest):
                 gripper.set_moving_force(30.0)
                 gripper.close(True)
                 gripper.open(True)
-            print "Disabling robot..."
+            print ("Disabling robot...")
             self._rs.disable()
             self.result[0] = True
         except Exception:
@@ -433,7 +433,7 @@ class BlinkLEDs(SmokeTest):
                 )
 
             for itb in itb_names:
-                print "Test: Blink %s" % itb
+                print ("Test: Blink %s" % itb)
                 io = baxter_interface.DigitalIO(itb)
                 _blink(io)
             self.result[0] = True
@@ -463,9 +463,9 @@ class Cameras(SmokeTest):
             Open camera and display to screen for 10 seconds
             """
             camera.resolution = (960, 600,)
-            print "Test: Opening %s" % name
+            print ("Test: Opening %s" % name)
             camera.open()
-            print "Test: Display %s to Screen - 10 Seconds" % name
+            print ("Test: Display %s to Screen - 10 Seconds" % name)
             rospy.Subscriber(
                 '/cameras/' + name + "/image",
                 Image,
@@ -504,10 +504,10 @@ class Cameras(SmokeTest):
             """
             Turn on the left/right_hand_cameras with default settings.
             """
-            print "Restarting the Default Cameras..."
+            print ("Restarting the Default Cameras...")
             camera_list = _list_cameras()
             for camera_name in camera_names:
-                print "Restarting {0}".format(camera_name)
+                print ("Restarting {0}".format(camera_name))
                 if not camera_name in camera_list.cameras:
                     # Attempt to close another camera
                     # and list services again
@@ -521,7 +521,7 @@ class Cameras(SmokeTest):
                 camera.close()
 
         try:
-            print "Enabling robot..."
+            print ("Enabling robot...")
             self._rs.enable()
             print ("Test: Verify Left_Hand, Right_Hand, and Head "
                    "Cameras Present")
@@ -541,7 +541,7 @@ class Cameras(SmokeTest):
                 _display(camera, camera_name)
                 camera_list = _list_cameras()
             _reset_defaults()
-            print "Disabling robot..."
+            print ("Disabling robot...")
             self._rs.disable()
             self.result[0] = True
         except Exception:
