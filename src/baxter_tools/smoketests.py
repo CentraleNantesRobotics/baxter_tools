@@ -365,7 +365,7 @@ class Grippers(SmokeTest):
                                                   )
                 print ("Test: Reboot %s Gripper" % (name.capitalize(),))
                 gripper.reboot()
-                print ("Test: Calibrating %s Gripper" % (name.capitalize(),)
+                print ("Test: Calibrating %s Gripper" % (name.capitalize(),))
                 gripper.calibrate()
                 print ("Test: Close %s Gripper" % (name.capitalize(),))
                 gripper.close(True)
