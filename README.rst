@@ -4,6 +4,10 @@ baxter_tools
 Useful operational and maintenance tools for use with the Baxter Research Robot
 from Rethink Robotics
 
+Python3 / ROS Noetic compatible
+
+
+
 Code & Tickets
 --------------
 
