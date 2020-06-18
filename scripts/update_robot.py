@@ -164,7 +164,7 @@ def run_update(updater, uuid):
 
     try:
         updater.command_update(uuid)
-    except OSError, e:
+    except OSError as e:
         if e.errno == errno.EINVAL:
             print e.strerror
             return 1
@@ -176,7 +176,7 @@ def run_update(updater, uuid):
             timeout=5 * 60,
             timeout_msg="Timeout waiting for update to succeed"
         )
-    except Exception, e:
+    except Exception as e:
         if not (hasattr(e, 'errno') and e.errno == errno.ESHUTDOWN):
             print e.strerror
         nl.rc = 1

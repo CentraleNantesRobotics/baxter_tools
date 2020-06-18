@@ -102,7 +102,7 @@ def main():
     error = None
     try:
         tt.run()
-    except Exception, e:
+    except Exception as e:
         error = e.strerror
     finally:
         try:

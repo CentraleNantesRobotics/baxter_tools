@@ -268,7 +268,7 @@ class MoveArms(SmokeTest):
             try:
                 limb.move_to_joint_positions(angle, timeout)
                 queue.put(None)
-            except (Exception, exception):
+            except Exception as exception:
                 queue.put(traceback.format_exc())
                 queue.put(exception)
 
