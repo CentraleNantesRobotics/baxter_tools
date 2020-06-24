@@ -6,9 +6,9 @@ from std_msgs.msg import String
 
 rospy.init_node('description_publisher')
 
-description = rospy.get_param('/robot/robot_description')
+description = rospy.get_param('/robot_description')
 
-pub = rospy.Publisher('/robot/robot_description', String, queue_size=10, latch=True)
+pub = rospy.Publisher('/robot_description', String, queue_size=10, latch=True)
 
 #while not rospy.is_shutdown():
 pub.publish(description)
